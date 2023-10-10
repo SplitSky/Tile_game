@@ -69,7 +69,7 @@ int Board::play_turn(bool (*func)(std::unordered_map<int, bool>)) {
 	return this->total_score;
 }
 
-bool strat_1(std::unordered_map<int, bool> board, std::vector<int> tiles) {
+bool strat_1(std::unordered_map<int, bool> board, std::vector<int> tiles, int size) {
 	// highest tiles first
 	std::vector<int> board_state;
 	for (size_t i{0}; i<size; i++) {
@@ -102,3 +102,59 @@ int main() {
 		scores[1] += strat_2();
 	}
 }
+
+// things to add
+// 1. Strategy logic implement
+// 2. Write an external function that generates the solutions
+// based on the board state and the rolled number
+// -> Consider strat function to return the tiles chosen only given
+// all of the options
+
+// function generating tiles is:
+void findCombinations(int rolledNumber, const std::vector<int>& availableNumbers, std::vector<int>& currentCombination, std::vector<std::vector<int>>& validCombinations) {
+    int currentSum = 0;
+    for (int num : currentCombination) {
+        currentSum += num;
+    }
+
+    if (currentSum == rolledNumber) {
+        validCombinations.push_back(currentCombination);
+        return;
+    }
+
+    if (currentSum > rolledNumber || availableNumbers.empty()) {
+        return;
+    }
+
+    int currentNumber = availableNumbers[0];
+    currentCombination.push_back(currentNumber);
+    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
+    currentCombination.pop_back();
+    availableNumbers.erase(availableNumbers.begin());
+    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
+    availableNumbers.insert(availableNumbers.begin(), currentNumber);
+}
+
+
+int main() {
+    int rolledNumber = 9; // Replace with your rolled number
+    std::vector<int> availableNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9}; // Replace with your available numbers
+
+    std::vector<std::vector<int>> validCombinations;
+    std::vector<int> currentCombination;
+
+    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
+
+    std::cout << "Valid combinations for rolling " << rolledNumber << ":\n";
+    for (const std::vector<int>& combination : validCombinations) {
+        for (int num : combination) {
+            std::cout << num << ' ';
+        }
+        std::cout << '\n';
+    }
+
+    return 0;
+}
+
+// edit later
+
