@@ -60,8 +60,10 @@ int Board::play_turn(bool (*func)(std::unordered_map<int, bool>)) {
 	// plays the turn using a given strategy function
 	// repeats the turn until exhausted
 	bool keep_going = true;
+	bool indic;
 	while (keep_going) {
-		if (func(this->board) == false) {
+		indic = func(this->board); // play one turn
+		if (indic) {
 			keep_going = false;
 			this->total_score = this->sum_board();
 		}
@@ -75,6 +77,7 @@ bool strat_1(std::unordered_map<int, bool> board, std::vector<int> tiles, int si
 	for (size_t i{0}; i<size; i++) {
 
 	}
+	return;
 }
 
 int strat_2() {
@@ -111,50 +114,35 @@ int main() {
 // all of the options
 
 // function generating tiles is:
-void findCombinations(int rolledNumber, const std::vector<int>& availableNumbers, std::vector<int>& currentCombination, std::vector<std::vector<int>>& validCombinations) {
-    int currentSum = 0;
-    for (int num : currentCombination) {
-        currentSum += num;
-    }
 
-    if (currentSum == rolledNumber) {
-        validCombinations.push_back(currentCombination);
-        return;
-    }
+// sort numbers lowest first -> Use while loop and terminate when it fails assignment
+// check logic
 
-    if (currentSum > rolledNumber || availableNumbers.empty()) {
-        return;
-    }
+std::vector<int> gen_Combinations(std::vector<int> numbers, int target) {
+	std::vector<std::vector<int>> combinations;
+	std::vector<int> temp;
+	// check single number
+	for (int value: numbers) {
+		if (value == target) {
+			combinations.push_back({value});
+		}
+	}
+	// check double number
+	for (size_t i=0; i<numbers.size(); i++) {
+		for (size_t j=0; j<numbers.size(); j++) {
+			if (numbers[i] + numbers[j] == target && i != j)
+				temp.emplace_back(numbers[i]);
+				temp.emplace_back(numbers[j]);
+				combinations.emplace_back(temp);
+		}
+	}
+	// check triple
+	for (size_t i=0; i<numbers.size(); i++) {
 
-    int currentNumber = availableNumbers[0];
-    currentCombination.push_back(currentNumber);
-    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
-    currentCombination.pop_back();
-    availableNumbers.erase(availableNumbers.begin());
-    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
-    availableNumbers.insert(availableNumbers.begin(), currentNumber);
+	}
+
+	// check quadruple
+
 }
-
-
-int main() {
-    int rolledNumber = 9; // Replace with your rolled number
-    std::vector<int> availableNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9}; // Replace with your available numbers
-
-    std::vector<std::vector<int>> validCombinations;
-    std::vector<int> currentCombination;
-
-    findCombinations(rolledNumber, availableNumbers, currentCombination, validCombinations);
-
-    std::cout << "Valid combinations for rolling " << rolledNumber << ":\n";
-    for (const std::vector<int>& combination : validCombinations) {
-        for (int num : combination) {
-            std::cout << num << ' ';
-        }
-        std::cout << '\n';
-    }
-
-    return 0;
-}
-
 // edit later
 
