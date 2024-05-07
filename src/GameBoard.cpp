@@ -13,6 +13,10 @@ void GameBoard::reset() {
 }
 
 bool GameBoard::canAchieveSum(int sum) {
-    // Implementation needed
+    // Check if sum exceeds the total of tiles
     return false; // Placeholder
+}
+
+void SortTiles(int type) {
+    // Creates the copy of the tiles after sorting them
 }
