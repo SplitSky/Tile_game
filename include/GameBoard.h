@@ -7,15 +7,15 @@
 
 class GameBoard {
 public:
-    std::vector<Tile> tiles;
+    std::vector<int> tiles;
     std::vector<std::vector<int>> combinations;
 
-    GameBoard();
+    GameBoard(int board_size);
     void reset();
     bool canAchieveSum(int sum);
     int sumBoard();
     void setCombinations(int target_value);
-    bool playTurn()
+    void playTurn(std::function<std::vector<int>(std::vector<Tile>, int, std::vector<std::vector<int>>)> func); // takes in a strategy and the dice roll and plays the turn
 };
 
 #endif // GAMEBOARD_H

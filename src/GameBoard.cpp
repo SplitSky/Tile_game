@@ -5,15 +5,32 @@
 #include "utils.h"
 #include <functional>
 
-GameBoard::GameBoard() {
-    for (int i = 1; i <= 9; ++i) {
-        tiles.emplace_back(i);
+/*
+Represent tiles as a vector
+[1,1,1,1,1,1,1,1,0]
+The index+1 = value
+1 = not flipped
+0 = flipped
+*/
+
+GameBoard::GameBoard(int board_size) {
+    for (int i = 1; i <= board_size; ++i) {
+        tiles.emplace_back(Tile(0));
     }
+}
+
+int GameBoard::sumBoard() {
+    // Sum the board unflipped tiles. The sum of the tiles available
+    int total = 0;
+    for (size_t i=0; i<tiles.size(); i++) {
+        total += (i+1)*tiles[i];
+    }
+    return total;
 }
 
 void GameBoard::reset() {
     for (auto& tile : tiles) {
-        tile.flipped = false;
+        tile = 0;
     }
 }
 
@@ -35,17 +52,14 @@ void GameBoard::setCombinations(int target_value) {
         values.emplace_back(tile_temp.value);
     }
     this->combinations = combinationSum(values, target_value);
+    // this function does the processing of the possible moves. The strategy section only picks the tile to pick from this list
 }
 
-void playTurn(GameBoard& board, int diceRoll, std::function<std::vector<int>(const GameBoard&, int)> strategy) {
-    std::vector<int> tilesToFlip = strategy(board, diceRoll);
-    if (board.canFlip(tilesToFlip)) {
-        board.flipTiles(tilesToFlip);
-        std::cout << "Flipped tiles: ";
-        for (int tile : tilesToFlip) std::cout << tile << " ";
-        std::cout << std::endl;
-    } else {
-        std::cout << "Cannot flip the chosen tiles." << std::endl;
+void GameBoard::playTurn(std::function<std::vector<int>(std::vector<int>, int, std::vector<std::vector<int>>)> func) {
+    int diceRoll = rollTwoDice();
+    std::vector<int> tilesToFlip = func(this->tiles, diceRoll, this->combinations);
+    // generates only the allowed tiles given the game state and possible combinations
+    for (int tile_value : tilesToFlip) {
+
     }
-    board.printBoard();
 }
