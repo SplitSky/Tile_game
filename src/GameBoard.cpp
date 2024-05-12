@@ -15,7 +15,7 @@ The index+1 = value
 
 GameBoard::GameBoard(int board_size) {
     for (int i = 1; i <= board_size; ++i) {
-        tiles.emplace_back(Tile(0));
+        tiles.emplace_back(1);
     }
 }
 
@@ -39,8 +39,8 @@ bool GameBoard::canAchieveSum(int sum) {
     std::vector<int> temp_board = {};
     // sorts the array
     int tilesSum = 0;
-    for (Tile tile_temp: tiles) {
-        tilesSum += tile_temp.value;
+    for (size_t i = 0; i <= tiles.size(); i ++) {
+        tilesSum += (i+1)*tiles[i];
     }
     return tilesSum >= sum;
 }
@@ -48,8 +48,8 @@ bool GameBoard::canAchieveSum(int sum) {
 void GameBoard::setCombinations(int target_value) {
     // saves the combinations of the allowed tiles into the variable combinations
     std::vector<int> values = {};
-    for (Tile tile_temp : tiles) {
-        values.emplace_back(tile_temp.value);
+    for (size_t i=0; i <= tiles.size(); i++) {
+        values.emplace_back(i+1);
     }
     this->combinations = combinationSum(values, target_value);
     // this function does the processing of the possible moves. The strategy section only picks the tile to pick from this list
@@ -60,6 +60,8 @@ void GameBoard::playTurn(std::function<std::vector<int>(std::vector<int>, int, s
     std::vector<int> tilesToFlip = func(this->tiles, diceRoll, this->combinations);
     // generates only the allowed tiles given the game state and possible combinations
     for (int tile_value : tilesToFlip) {
-
+        // iterates over tiles in combination chosen by the strategy
+        // flips them one by one
+        
     }
 }
