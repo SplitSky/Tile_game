@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include<random>
 
 struct tile {
     bool flipped;
@@ -64,7 +65,35 @@ bool flipStrat1(std::vector<tile> &tiles, int score) {
     return true;
 }
 
+int rollTwoDice() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distr(1,6);
+    int die1 = distr(gen);
+    int die2 = distr(gen);
+    return die1 + die2;
+}
 
+int sumBoard(std::vector<tile> &tiles) {
+    int sum = 0;
+    for (size_t i = 0; i<tiles.size(); i++) {
+        if (tiles[i].flipped == true) {
+            sum += tiles[i].value;
+        }
+    }
+    return sum;
+}
+
+int playTurn(std::vector<tile> &tiles) {
+    // plays through the entire round until tiles can't be flipped and returns a score
+    int roll = rollTwoDice();
+    int score = 0;
+    while (flipStrat1(tiles, roll) == true) { // plays until it can't flip anymore
+        score += sumBoard(tiles);
+        int roll = rollTwoDice();
+    }
+    return score;
+}
 
 int main() {
     int boardSize = 10;
@@ -73,19 +102,9 @@ int main() {
         tiles.push_back(tile(false, i));
     }
     // board populated
-
-    // initialize the loop for a single combination flipping
-    int target_score = 6;
-    if (flipStrat1(tiles, target_score)) {
-        std::cout << "Flipping was successful." << std::endl;
-    } else {
-        std::cout << "No combination found for the target score." << std::endl;
-    }
-
-    // Print the state of tiles
-    for (const auto& t : tiles) {
-        std::cout << "Value: " << t.value << ", Flipped: " << (t.flipped ? "true" : "false") << std::endl;
-    }
-
+    std::vector<int> scores;
+    scores.push_back(playTurn(tiles));
+    // print out all of the scores
+    std::cout << "Length of the scores array " << scores.size() << std::endl; 
     return 0;
 }
