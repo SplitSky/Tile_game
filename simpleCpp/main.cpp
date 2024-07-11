@@ -24,10 +24,35 @@ std::vector<int> get_values_subvector(const std::vector<tile>& tiles, size_t sta
     return values;
 }
 
-std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles, int score) {
-    std::vector<std::vector<int>> results;
-    int n = tiles.size();
+void printCombinations(const std::vector<std::vector<int>> &combinations) {
+  std::cout << "Printing combinations" << std::endl;
+    for (size_t i{0}; i < combinations.size(); i++) {
+      std::cout << "[";
+      for (size_t j{0}; j < combinations[i].size(); j++) {
+        std::cout << combinations[i][j] << ", ";
+      }
+      std::cout << "], ";
+    }
+}
 
+void print_Tiles(std::vector<tile> &tiles) {
+    std::cout << "[";
+    for (size_t i{0}; i<tiles.size(); i++) {
+        if (tiles[i].flipped == false) {
+            std::cout << tiles[i].value << " ";
+        }
+    }
+    std::cout << "]" << std::endl;
+}
+
+std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles_in, int score) {
+    std::vector<std::vector<int>> results;
+    int n = tiles_in.size();
+    // change the tiles vector to remove the flipped tiles
+    std::vector<tile> tiles;
+    std::copy_if(tiles_in.begin(), tiles_in.end(), std::back_inserter(tiles), [](const tile& t) {
+        return !t.flipped;
+    });
     for (size_t start_index = 0; start_index < n; ++start_index) {
         int sum = 0;
         for (size_t end_index = start_index; end_index < n; ++end_index) {
@@ -40,7 +65,7 @@ std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles, in
             }
         }
     }
-
+    printCombinations(results);
     return results;
 }
 
@@ -88,9 +113,12 @@ int playTurn(std::vector<tile> &tiles) {
     // plays through the entire round until tiles can't be flipped and returns a score
     int roll = rollTwoDice();
     int score = 0;
-    while (flipStrat1(tiles, roll) == true) { // plays until it can't flip anymore
+    bool continue_check = true;
+    while (continue_check) { // plays until it can't flip anymore
+        continue_check = flipStrat1(tiles, roll);  
+        roll = rollTwoDice();
         score += sumBoard(tiles);
-        int roll = rollTwoDice();
+        print_Tiles(tiles);
     }
     return score;
 }
