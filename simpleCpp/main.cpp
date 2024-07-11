@@ -117,21 +117,25 @@ int playTurn(std::vector<tile> &tiles) {
     while (continue_check) { // plays until it can't flip anymore
         continue_check = flipStrat1(tiles, roll);  
         roll = rollTwoDice();
-        score += sumBoard(tiles);
         print_Tiles(tiles);
     }
+    score += sumBoard(tiles);
     return score;
 }
 
 int main() {
     int boardSize = 10;
     std::vector<tile> tiles;
+    int max_rounds = 20;
     for (size_t i = 1; i < boardSize; ++i) {
         tiles.push_back(tile(false, i));
     }
     // board populated
     std::vector<int> scores;
-    scores.push_back(playTurn(tiles));
+    for (size_t i{0}; i<max_rounds; i++) {
+      scores.push_back(playTurn(tiles));
+    }
+
     // print out all of the scores
     std::cout << "Length of the scores array " << scores.size() << std::endl; 
     return 0;
