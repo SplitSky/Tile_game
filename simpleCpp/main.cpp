@@ -4,6 +4,7 @@
 #include <functional>
 #include <stdexcept>
 #include<random>
+#include<numeric>
 
 struct tile {
     bool flipped;
@@ -73,27 +74,6 @@ std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles_in,
     return results;
 }
 
-
-std::vector<std::vector<int>> getCombinations2(const std::vector<tile>& tiles, int score) {
-    std::vector<std::vector<int>> results;
-    int n = tiles.size();
-
-    for (size_t start_index = 0; start_index < n; ++start_index) {
-        int sum = 0;
-        for (size_t end_index = start_index; end_index < n; ++end_index) {
-            sum += tiles[end_index].value;
-            if (sum == score) {
-                results.push_back(get_values_subvector(tiles, start_index, end_index));
-                break; // Since the input is sorted, no need to continue once the sum is found
-            } else if (sum > score) {
-                break; // Since the input is sorted, further elements will only increase the sum
-            }
-        }
-    }
-
-    return results;
-}
-
 bool flipStrat1(std::vector<tile> &tiles, int score) {
     // flip the first one in the combinations
     std::vector<std::vector<int>> combinations = getCombinations(tiles, score);
@@ -102,7 +82,10 @@ bool flipStrat1(std::vector<tile> &tiles, int score) {
         // there are no combinations.
         return false;
     }
-    std::vector<int> combination = combinations[0];
+
+    // add function here which returns the index of the combination to use
+
+    std::vector<int> combination = combinations[0]; // picking the strategy
     // do the flipping
     for (int number : combination) {
         for (auto& temp_tile : tiles) { // Use a reference to modify the original tile
@@ -134,6 +117,12 @@ int sumBoard(std::vector<tile> &tiles) {
     return sum;
 }
 
+void resetBoard(std::vector<tile> &tiles) {
+  for (auto &t : tiles) {
+    t.flipped = false;
+  }
+}
+
 int playTurn(std::vector<tile> &tiles) {
     // plays through the entire round until tiles can't be flipped and returns a score
     int roll = rollTwoDice();
@@ -141,45 +130,35 @@ int playTurn(std::vector<tile> &tiles) {
     bool continue_check = true;
     while (continue_check) { // plays until it can't flip anymore
         continue_check = flipStrat1(tiles, roll);  
+        std::cout << "The roll = " << roll << std::endl;
         roll = rollTwoDice();
         print_Tiles(tiles);
     }
     score += sumBoard(tiles);
+    resetBoard(tiles);
+    std::cout << "End Turn!" << std::endl;
     return score;
 }
 
 int main() {
     int boardSize = 10;
     std::vector<tile> tiles;
-    int max_rounds = 20;
+    int max_rounds = 10;
     for (int i = 1; i < boardSize; ++i) {
         tiles.push_back(tile(false, i));
     }
-    int score = 7;
+    print_Tiles(tiles);
     // board populated
     // print the results of vector sub array
     //print_Tiles(tiles);
-    std::vector<std::vector<int>> combinations = getCombinations2(tiles, score);
-    // print the combinations
-    for (int i{0} ; i < combinations.size(); i ++ ) {
-      for (int j{0} ; j < combinations[i].size(); j ++) {
-        std::cout << " combinations[" << i << "][" << j << "] = " << combinations[i][j] << std::endl;
-      }
+    std::vector<int> scores;
+    for (int i{0}; i<max_rounds; i++) {
+      scores.push_back(playTurn(tiles));
     }
 
-    std::vector<int> tiles_temp = get_values_subvector(tiles,0, 3);
-    std::cout << "[ ";
-    for (int i{0}; i<tiles_temp.size(); i++) {
-      std::cout << tiles_temp[i] << ", ";
-    } 
-    std::cout << " ] - The subvector" << std::endl;
-     
-    // std::vector<int> scores;
-   // for (int i{0}; i<max_rounds; i++) {
-   //   scores.push_back(playTurn(tiles));
-   // }
-
-   // // print out all of the scores
-   // std::cout << "Length of the scores array " << scores.size() << std::endl; 
+   // print out all of the scores
+    std::cout << "Length of the scores array " << scores.size() << std::endl; 
+    int total_score = std::accumulate(scores.begin(), scores.end(), 0);
+    std::cout << "Total Score = " << total_score << std::endl;
     return 0;
 }
