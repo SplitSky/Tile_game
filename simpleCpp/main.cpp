@@ -116,7 +116,9 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
   } else if (type == 2) {
     // pick one where the difference between the two tiles is largest
     choice = chooseLargestRangeGroupIndex(combinations);
+    std::cout << "Strat picker" << combinations.size() << " " << choice << std::endl;
   } else if (type == 3) {
+    // pick the straegy with the largest number of tiles
     choice = 0;
     int longest = combinations[0].size();
     for (int i{1}; i<combinations.size(); i++) {
@@ -138,7 +140,7 @@ bool flipStrat1(std::vector<tile> &tiles, int score, int strategy) {
     }
 
     // add function here which returns the index of the combination to use
-    int choice = strategyPicker(strategy, combinations);
+    int choice = strategyPicker(strategy, combinations); // picks the index of the combination given the strategy
     std::vector<int> combination = combinations[choice]; // picking the strategy
     // do the flipping
     for (int number : combination) {
@@ -203,22 +205,24 @@ int main() {
         tiles.push_back(tile(false, i));
     }
 
-    for (int strat{1}; strat <= 3; strat++) {
-      std::cout << "Playing with strategy " << strat << std::endl;
-      print_Tiles(tiles);
-      int temp_score = 0;
-      std::vector<int> scores;
-      for (int i{0}; i<max_rounds; i++) {
-        temp_score = playTurn(tiles);
-        std::cout << "Score after turn! " << temp_score << std::endl;
-        scores.push_back(temp_score);
-      }
+    //for (int strat{1}; strat <= 3; strat++) {
+    int strat = 1;
+    std::cout << "Playing with strategy " << strat << std::endl;
+    print_Tiles(tiles);
+    int temp_score = 0;
+    std::vector<int> scores;
+    
+    for (int i{0}; i<max_rounds; i++) {
+      temp_score = playTurn(tiles, strat);
+      std::cout << "Score after turn! " << temp_score << std::endl;
+      scores.push_back(temp_score);
+    }
 
       // print out all of the scores
-      std::cout << "Length of the scores array " << scores.size() << std::endl; 
-      int total_score = std::accumulate(scores.begin(), scores.end(), 0);
-      std::cout << "Total Score = " << total_score << std::endl;
-    }
+    std::cout << "Length of the scores array " << scores.size() << std::endl; 
+    int total_score = std::accumulate(scores.begin(), scores.end(), 0);
+    std::cout << "Total Score = " << total_score << std::endl;
+    //}
 
     return 0;
 }
