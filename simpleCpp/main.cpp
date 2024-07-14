@@ -17,7 +17,6 @@ std::vector<int> get_values_subvector(const std::vector<tile>& tiles, size_t sta
     if (start_index > end_index || end_index >= tiles.size() || start_index >= tiles.size()) {
         throw std::out_of_range("Invalid indices for subvector");
     }
-
     std::vector<int> values;
     values.reserve(end_index - start_index + 1);
 
@@ -34,10 +33,11 @@ void printCombinations(const std::vector<std::vector<int>> &combinations) {
     for (size_t i{0}; i < combinations.size(); i++) {
       std::cout << "[";
       for (size_t j{0}; j < combinations[i].size(); j++) {
-        std::cout << combinations[i][j] << ", ";
+        std::cout << combinations[i][j] << " ";
       }
-      std::cout << "], ";
+      std::cout << "] ";
     }
+    std::cout << std::endl;
 }
 
 void print_Tiles(std::vector<tile> &tiles) {
@@ -84,7 +84,7 @@ int calculateRange(const std::vector<int>& list) {
 }
 
 // Function to find the index of the list with the largest range, or largest number if ranges are equal
-int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfLists) {
+int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfLists) { // TODO: change this to work correctly
     int bestIndex = -1;
     int max_range = -1;
     int max_number = -1;
@@ -104,29 +104,42 @@ int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfList
     return bestIndex;
 }
 
-int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
-  // picks the strategy
-  choice = 0
-  if (type == 1) {
-    // pick a random one
+int generateRandInRange(int start, int end) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distr(0,combinations.size());
-    choice = distr(gen);
-  } else if (type == 2) {
-    // pick one where the difference between the two tiles is largest
-    choice = chooseLargestRangeGroupIndex(combinations);
-    std::cout << "Strat picker" << combinations.size() << " " << choice << std::endl;
-  } else if (type == 3) {
-    // pick the straegy with the largest number of tiles
-    choice = 0;
-    int longest = combinations[0].size();
-    for (int i{1}; i<combinations.size(); i++) {
-      if (combinations[i].size() > longest) {
-        choice = i;
-      }
+    std::uniform_int_distribution<> distr(start,end);
+    int die1 = distr(gen);
+    return die1;
+}
+
+int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
+  // picks the strategy
+  int choice = 0;
+  if (type == 1) {
+    // pick a random one
+    
+    if (combinations.size() > 1) {
+      int comb_size = combinations.size();
+      choice = generateRandInRange(0,comb_size);
     }
+    std::cout << "The length of combinations " << combinations.size() << " ---- " << choice << std::endl;
+    printCombinations(combinations);
   }
+ // } else if (type == 2) {
+ //   // pick one where the difference between the two tiles is largest
+ //   choice = chooseLargestRangeGroupIndex(combinations);
+ //   std::cout << "Strat picker" << combinations.size() << " " << choice << std::endl;
+ // } else if (type == 3) {
+ //   // pick the straegy with the largest number of tiles
+ //   choice = 0;
+ //   int longest = combinations[0].size();
+ //   for (int i{1}; i<combinations.size(); i++) {
+ //     if (combinations[i].size() > longest) {
+ //       choice = i;
+ //     }
+ //   }
+ //}
+  std::cout << "The choice: " << choice << std::endl;
   return choice;
 }
 
@@ -204,7 +217,6 @@ int main() {
     for (int i = 1; i < boardSize; ++i) {
         tiles.push_back(tile(false, i));
     }
-
     //for (int strat{1}; strat <= 3; strat++) {
     int strat = 1;
     std::cout << "Playing with strategy " << strat << std::endl;
@@ -218,7 +230,7 @@ int main() {
       scores.push_back(temp_score);
     }
 
-      // print out all of the scores
+    // print out all of the scores
     std::cout << "Length of the scores array " << scores.size() << std::endl; 
     int total_score = std::accumulate(scores.begin(), scores.end(), 0);
     std::cout << "Total Score = " << total_score << std::endl;
