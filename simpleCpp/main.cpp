@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include<random>
 #include<numeric>
+#include<cassert>
 
 struct tile {
     bool flipped;
@@ -101,9 +102,7 @@ int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfList
         }
     }
     return bestIndex;
-
 }
-
 
 // NOTE: The implementaiton is lacking
 int chooseSegmentIndex(std::vector<std::vector<int>>& combinations) {
@@ -112,20 +111,20 @@ int chooseSegmentIndex(std::vector<std::vector<int>>& combinations) {
   int best_diff = 0; // This is a (max - min)^2
   int temp_diff = 0;
   // Sort the array
-  // use iterator with lambda
-  // define lambda to be find the (max - min)^2 and maximise
+  // get the diff squared
+  // check if this is largest. If it is assing index
  
   for (size_t i{0}; i<combinations.size(); i++) {
     std::sort(combinations[i].begin(), combinations[i].end());
-    temp_diff = (combinations[0] - combinations[combination[i].size()-1]);
+    temp_diff = (combinations[i][0] - combinations[i][combinations[i].size()-1]);
     temp_diff = temp_diff * temp_diff; // make the diff positive
     if (temp_diff > best_diff) {
       best_diff = temp_diff;
       bestIndex = i;
     }
   }
-
-
+  assert(bestIndex != static_cast<size_t>(-1)); // verify the combinations are working
+  return bestIndex;
 }
 
 int generateRandInRange(int start, int end) {
@@ -138,10 +137,10 @@ int generateRandInRange(int start, int end) {
 
 int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
   // picks the strategy
+  assert(type == 1 || type == 2 || type == 3);
   int choice = 0;
   if (type == 1) {
     // pick a random one
-    
     if (combinations.size() > 1) {
       int comb_size = combinations.size();
       choice = generateRandInRange(0,comb_size);
@@ -178,6 +177,7 @@ bool flipStrat1(std::vector<tile> &tiles, int score, int strategy) {
 
     // add function here which returns the index of the combination to use
     int choice = strategyPicker(strategy, combinations); // picks the index of the combination given the strategy
+    assert(choice < combinations.size()-1);
     std::vector<int> combination = combinations[choice]; // picking the strategy
     // do the flipping
     for (int number : combination) {
