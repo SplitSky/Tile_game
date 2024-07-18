@@ -24,7 +24,6 @@ std::vector<int> get_values_subvector(const std::vector<tile>& tiles, size_t sta
     for (size_t i = start_index; i <= end_index; ++i) {
         values.push_back(tiles[i].value);
     }
-
     return values;
 }
 
@@ -143,7 +142,7 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
     // pick a random one
     if (combinations.size() > 1) {
       int comb_size = combinations.size();
-      choice = generateRandInRange(0,comb_size);
+      choice = generateRandInRange(0,comb_size-1);
     }
     std::cout << "The length of combinations " << combinations.size() << " ---- " << choice << std::endl;
     printCombinations(combinations);
@@ -177,7 +176,7 @@ bool flipStrat1(std::vector<tile> &tiles, int score, int strategy) {
 
     // add function here which returns the index of the combination to use
     int choice = strategyPicker(strategy, combinations); // picks the index of the combination given the strategy
-    assert(choice < combinations.size()-1);
+    assert(static_cast<size_t>(choice) <= combinations.size()-1);
     std::vector<int> combination = combinations[choice]; // picking the strategy
     // do the flipping
     for (int number : combination) {
@@ -235,7 +234,7 @@ int playTurn(std::vector<tile> &tiles, int type) {
 
 int main() {
     int boardSize = 10;
-    int strategy = 1;
+    //int strategy = 1;
     std::vector<tile> tiles;
     int max_rounds = 10;
     for (int i = 1; i < boardSize; ++i) {
