@@ -100,8 +100,32 @@ int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfList
             bestIndex = i;
         }
     }
-
     return bestIndex;
+
+}
+
+
+// NOTE: The implementaiton is lacking
+int chooseSegmentIndex(std::vector<std::vector<int>>& combinations) {
+  // combinations come as a series of ints using a dynamic greedy approach
+  size_t bestIndex = -1;
+  int best_diff = 0; // This is a (max - min)^2
+  int temp_diff = 0;
+  // Sort the array
+  // use iterator with lambda
+  // define lambda to be find the (max - min)^2 and maximise
+ 
+  for (size_t i{0}; i<combinations.size(); i++) {
+    std::sort(combinations[i].begin(), combinations[i].end());
+    temp_diff = (combinations[0] - combinations[combination[i].size()-1]);
+    temp_diff = temp_diff * temp_diff; // make the diff positive
+    if (temp_diff > best_diff) {
+      best_diff = temp_diff;
+      bestIndex = i;
+    }
+  }
+
+
 }
 
 int generateRandInRange(int start, int end) {
