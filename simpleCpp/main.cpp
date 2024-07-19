@@ -55,10 +55,21 @@ std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles_in,
     std::vector<std::vector<int>> results;
     int n = tiles_in.size();
     // change the tiles vector to remove the flipped tiles
-    std::vector<tile> tiles;
+    std::vector<tile> tiles = {};
+    // this crashes it
+    // TODO: error is here
     std::copy_if(tiles_in.begin(), tiles_in.end(), std::back_inserter(tiles), [](const tile& t) {
         return !t.flipped;
     });
+    //
+   // for (int i{0}; i < tiles_in.size(); i++) {
+   //   if (tiles_in[i].flipped == false) {
+   //     tiles.emplace_back(tiles_in[i]); // copy
+   //   }
+   // }
+    if (tiles.size() == 0) {
+      return {};
+    }
     for (int start_index = 0; start_index < n; ++start_index) {
         int sum = 0;
         for (int end_index = start_index; end_index < n; ++end_index) {
@@ -71,6 +82,7 @@ std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles_in,
             }
         }
     }
+    std::cout << "Get Combinations return" << std::endl;
     return results;
 }
 
@@ -144,7 +156,6 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
       int comb_size = combinations.size();
       choice = generateRandInRange(0,comb_size-1);
     }
-    std::cout << "The length of combinations " << combinations.size() << " ---- " << choice << std::endl;
     printCombinations(combinations);
   }
  // } else if (type == 2) {
@@ -169,7 +180,7 @@ bool flipStrat1(std::vector<tile> &tiles, int score, int strategy) {
     // flip the first one in the combinations
     std::vector<std::vector<int>> combinations = getCombinations(tiles, score);
     // check the combinations
-    if (combinations.empty()) {
+    if (combinations.size() == 0) {
         // there are no combinations.
         return false;
     }
@@ -217,18 +228,17 @@ void resetBoard(std::vector<tile> &tiles) {
 
 int playTurn(std::vector<tile> &tiles, int type) {
     // plays through the entire round until tiles can't be flipped and returns a score
-    int roll = rollTwoDice();
+    int roll = 2;//rollTwoDice();
     int score = 0;
     bool continue_check = true;
     while (continue_check) { // plays until it can't flip anymore
-        continue_check = flipStrat1(tiles, roll, type);  
+        continue_check = flipStrat1(tiles, roll, type);
         std::cout << "The roll = " << roll << std::endl;
         roll = rollTwoDice();
         print_Tiles(tiles);
     }
     score += sumBoard(tiles);
-    resetBoard(tiles);
-    std::cout << "End Turn!" << std::endl;
+    //resetBoard(tiles);
     return score;
 }
 
@@ -236,10 +246,11 @@ int main() {
     int boardSize = 10;
     //int strategy = 1;
     std::vector<tile> tiles;
-    int max_rounds = 10;
+    int max_rounds = 1000;
     for (int i = 1; i < boardSize; ++i) {
         tiles.push_back(tile(false, i));
     }
+    // special case where all tiles are flipped besides the one
     //for (int strat{1}; strat <= 3; strat++) {
     int strat = 1;
     std::cout << "Playing with strategy " << strat << std::endl;
