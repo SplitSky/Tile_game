@@ -31,7 +31,8 @@ std::vector<int> get_values_subvector(const std::vector<tile>& tiles, size_t sta
 void printCombinations(const std::vector<std::vector<int>> &combinations) {
   std::cout << "Printing combinations" << std::endl;
     for (size_t i{0}; i < combinations.size(); i++) {
-      std::cout << "[";
+     
+std::cout << "[";
       for (size_t j{0}; j < combinations[i].size(); j++) {
         std::cout << combinations[i][j] << " ";
       }
@@ -82,7 +83,6 @@ std::vector<std::vector<int>> getCombinations(const std::vector<tile>& tiles_in,
             }
         }
     }
-    std::cout << "Get Combinations return" << std::endl;
     return results;
 }
 
@@ -156,9 +156,8 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
       int comb_size = combinations.size();
       choice = generateRandInRange(0,comb_size-1);
     }
-    printCombinations(combinations);
+    //printCombinations(combinations);
   } else if (type == 2) {
-    std::cout << "Strat 2 play" << std::endl;
     // pick one where the difference between the two tiles is largest
     choice = chooseLargestRangeGroupIndex(combinations);
   }// else if (type == 3) {
@@ -211,7 +210,7 @@ int rollTwoDice() {
 int sumBoard(std::vector<tile> &tiles) {
     int sum = 0;
     for (size_t i = 0; i<tiles.size(); i++) {
-        if (tiles[i].flipped == true) {
+        if (tiles[i].flipped == false) {
             sum += tiles[i].value;
         }
     }
@@ -231,42 +230,49 @@ int playTurn(std::vector<tile> &tiles, int type) {
     bool continue_check = true;
     while (continue_check) { // plays until it can't flip anymore
         continue_check = flipStrat1(tiles, roll, type);
-        std::cout << "The roll = " << roll << std::endl;
+        //std::cout << "The roll = " << roll << std::endl;
         roll = rollTwoDice();
-        print_Tiles(tiles);
+        //print_Tiles(tiles);
     }
     score += sumBoard(tiles);
     resetBoard(tiles);
     return score;
 }
 
-int main() {
-    int boardSize = 10;
-    //int strategy = 1;
+int playTurnWithStrat(int strat, int boardSize, int max_rounds) {
+    assert(strat > 0 && strat < 3);
+
     std::vector<tile> tiles;
-    int max_rounds = 1000;
     for (int i = 1; i < boardSize; ++i) {
         tiles.push_back(tile(false, i));
     }
     // special case where all tiles are flipped besides the one
     //for (int strat{1}; strat <= 3; strat++) {
-    int strat = 1;
-    std::cout << "Playing with strategy " << strat << std::endl;
-    print_Tiles(tiles);
+    //print_Tiles(tiles);
     int temp_score = 0;
     std::vector<int> scores;
     
     for (int i{0}; i<max_rounds; i++) {
       temp_score = playTurn(tiles, strat);
-      std::cout << "Score after turn! " << temp_score << std::endl;
+      //std::cout << "Total Score " << temp_score << std::endl;
       scores.push_back(temp_score);
     }
 
     // print out all of the scores
-    std::cout << "Length of the scores array " << scores.size() << std::endl; 
+    //std::cout << "Length of the scores array " << scores.size() << std::endl; 
     int total_score = std::accumulate(scores.begin(), scores.end(), 0);
-    std::cout << "Total Score = " << total_score << std::endl;
-    //}
+    //std::cout << "Total Score = " << total_score << std::endl;
 
-    return 0;
+    return total_score;
+}
+
+int main() {
+  std::vector<int> strategies_scored;
+  for (int i{1}; i<3; i++) {
+    strategies_scored.emplace_back(playTurnWithStrat(i, 10, 1000000));
+  }
+  for (int i{0}; i<strategies_scored.size(); i++) {
+    std::cout << "Strategy " << i << " - " << strategies_scored[i] << std::endl;
+  }
+  return 0;
 }
