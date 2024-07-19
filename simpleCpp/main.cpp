@@ -157,12 +157,11 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
       choice = generateRandInRange(0,comb_size-1);
     }
     printCombinations(combinations);
-  }
- // } else if (type == 2) {
- //   // pick one where the difference between the two tiles is largest
- //   choice = chooseLargestRangeGroupIndex(combinations);
- //   std::cout << "Strat picker" << combinations.size() << " " << choice << std::endl;
- // } else if (type == 3) {
+  } else if (type == 2) {
+    std::cout << "Strat 2 play" << std::endl;
+    // pick one where the difference between the two tiles is largest
+    choice = chooseLargestRangeGroupIndex(combinations);
+  }// else if (type == 3) {
  //   // pick the straegy with the largest number of tiles
  //   choice = 0;
  //   int longest = combinations[0].size();
@@ -172,7 +171,6 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
  //     }
  //   }
  //}
-  std::cout << "The choice: " << choice << std::endl;
   return choice;
 }
 
@@ -238,7 +236,7 @@ int playTurn(std::vector<tile> &tiles, int type) {
         print_Tiles(tiles);
     }
     score += sumBoard(tiles);
-    //resetBoard(tiles);
+    resetBoard(tiles);
     return score;
 }
 
