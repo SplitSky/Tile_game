@@ -160,16 +160,25 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
   } else if (type == 2) {
     // pick one where the difference between the two tiles is largest
     choice = chooseLargestRangeGroupIndex(combinations);
-  }// else if (type == 3) {
- //   // pick the straegy with the largest number of tiles
- //   choice = 0;
- //   int longest = combinations[0].size();
- //   for (int i{1}; i<combinations.size(); i++) {
- //     if (combinations[i].size() > longest) {
- //       choice = i;
- //     }
- //   }
- //}
+  } else if (type == 3) {
+    // picks one where the difference between the tiles is smallest 
+  }
+
+  // Remaining strategies to implement
+  // 1. minimise range
+  // 2. Maximise the remaining tiles
+  // 3. Minimise the remaining tiles 
+  // 4. Greedy Approach
+  // 5. Conservative Approach
+  // 6. Even-Odd Balance
+  // 7. Dynamic Programming approach
+  // 8. Probability-Based Strategy
+  // 9. Middle Value preference
+  // 10. Pattern Recognition
+  // 11. Machine Learning approach
+  // 12. Game Theory approach
+  // 13. Risk Management approach
+
   return choice;
 }
 
@@ -257,7 +266,6 @@ int playTurnWithStrat(int strat, int boardSize, int max_rounds) {
       //std::cout << "Total Score " << temp_score << std::endl;
       scores.push_back(temp_score);
     }
-
     // print out all of the scores
     //std::cout << "Length of the scores array " << scores.size() << std::endl; 
     int total_score = std::accumulate(scores.begin(), scores.end(), 0);
