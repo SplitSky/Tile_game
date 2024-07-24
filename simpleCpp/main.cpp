@@ -115,6 +115,24 @@ int chooseLargestRangeGroupIndex(const std::vector<std::vector<int>>& listOfList
     return bestIndex;
 }
 
+int chooseSmallRangeGroupIndex(const std::vector<std::vector<int>>& listOfLists) { // TODO: change this to work correctly
+    int bestIndex = -1;
+    int max_range = -1;
+    int max_number = -1;
+
+    for (size_t i = 0; i < listOfLists.size(); ++i) {
+        const auto& list = listOfLists[i];
+        int current_range = calculateRange(list);
+        int current_max_number = list.empty() ? -1 : *std::min_element(list.begin(), list.end());
+
+        if (current_range > max_range || (current_range == max_range && current_max_number > max_number)) {
+            max_range = current_range;
+            max_number = current_max_number;
+            bestIndex = i;
+        }
+    }
+    return bestIndex;
+}
 // NOTE: The implementaiton is lacking
 int chooseSegmentIndex(std::vector<std::vector<int>>& combinations) {
   // combinations come as a series of ints using a dynamic greedy approach
@@ -146,6 +164,18 @@ int generateRandInRange(int start, int end) {
     return die1;
 }
 
+int conservativeApproach(std::vector<std::vector<int>>& combinations) {
+  // keep keep the most tiles possible for the combinations
+  size_t best_index = 0;
+  int smallest_size = combinations[0].size();
+  for (size_t i{0}; i<combinations.size(); i++) {
+    if (combinations[i].size() < smallest_size);
+      best_index = i;
+  }
+  return best_index;
+}
+
+
 int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
   // picks the strategy
   assert(type == 1 || type == 2 || type == 3);
@@ -162,7 +192,12 @@ int strategyPicker(int type, std::vector<std::vector<int>> combinations) {
     choice = chooseLargestRangeGroupIndex(combinations);
   } else if (type == 3) {
     // picks one where the difference between the tiles is smallest 
-  }
+    choice = chooseSmallRangeGroupIndex(combinations);
+  } //else if (type == 4) {
+//    choice = conservativeApproach(combinations);
+//  } else if (type == 5) {
+//    choice = probabilityApproach(combinations); // TODO: Add addiitonal fields for size and 
+//  }
 
   // Remaining strategies to implement
   // 1. minimise range
@@ -275,9 +310,23 @@ int playTurnWithStrat(int strat, int boardSize, int max_rounds) {
 }
 
 int main() {
+  
+  // gen all of the combinations for each value
+  std::vector<tile> tiles2;
+    for (int i = 1; i < 10; ++i) {
+        tiles2.push_back(tile(false, i));
+  }
+
+  std::vector<std::vector<int>> combinations2;
+  for (int i{2} ; i < 13; i++) {
+    combinations2 = getCombinations(tiles2, i);
+    printCombinations(combinations2);
+  }
+
+  return 0;
   std::vector<int> strategies_scored;
   for (int i{1}; i<3; i++) {
-    strategies_scored.emplace_back(playTurnWithStrat(i, 10, 1000000));
+    strategies_scored.emplace_back(playTurnWithStrat(i, 10, 100));
   }
   for (int i{0}; i<strategies_scored.size(); i++) {
     std::cout << "Strategy " << i << " - " << strategies_scored[i] << std::endl;
