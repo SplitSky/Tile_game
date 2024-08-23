@@ -310,19 +310,16 @@ int playTurnWithStrat(int strat, int boardSize, int max_rounds) {
 }
 
 int main() {
-  
   // gen all of the combinations for each value
   std::vector<tile> tiles2;
     for (int i = 1; i < 10; ++i) {
         tiles2.push_back(tile(false, i));
   }
-
   std::vector<std::vector<int>> combinations2;
   for (int i{2} ; i < 13; i++) {
     combinations2 = getCombinations(tiles2, i);
     printCombinations(combinations2);
   }
-
   return 0;
   std::vector<int> strategies_scored;
   for (int i{1}; i<3; i++) {
