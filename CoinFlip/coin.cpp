@@ -18,3 +18,23 @@
 // This now lets you keep track of how many uses you have and given the present recursion/cascade you can just pass the candidate list until you
 // solve the base problem and then zip right back up
 // solve the general case first then modify code to fix this
+
+#include<iostream>
+#include<vector>
+
+
+
+// Example -> coins [1,2,5] and amount = 5
+// Combinations are:
+// 1,1,1,1,1
+// 1,1,1,2
+// 1,2,2
+// 5
+// 
+//
+
+
+
+int main() { 
+    // declare the testing list
+}
