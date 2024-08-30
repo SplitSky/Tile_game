@@ -19,11 +19,6 @@
 // solve the base problem and then zip right back up
 // solve the general case first then modify code to fix this
 
-#include<iostream>
-#include<vector>
-
-
-
 // Example -> coins [1,2,5] and amount = 5
 // Combinations are:
 // 1,1,1,1,1
@@ -33,8 +28,41 @@
 // 
 //
 
+Algortihm
+1. Sort the coins descending
+2. Set i = 0
+2. Pick coin c[i]
+3. Check if target - coin < 0 : if so i ++
+4. If target - coin = 0
+    -> add combination
+5. If target - coin > 0
 
 
-int main() { 
-    // declare the testing list
+function(target, coins)
+
+
+# Example 2
+coins -> [1,4,5,7] and amount = 3
+Combinations are: 
+1,1,1
+# Example 3
+coins -> [1,2,3,4,5,6] amount = 7
+Combinations are:
+1,1,1,1
+1,1,2
+2,2
+1,3
+4
+
+
+//
+t = 7
+while t - s
+
+dict = {
+    1 : 0,
+    2 : 0,
+    3 : 0,
+    4 : 0,
+    5 : 0
 }
