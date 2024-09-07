@@ -65,4 +65,43 @@ dict = {
     3 : 0,
     4 : 0,
     5 : 0
+=======
+#include<iostream>
+#include<vector>
+#include <unordered_map>
+#include <utility>
+#include <functional>
+
+// Using an array of ints count combinations that sum up to that amount
+// amount = 5
+// coins = [1,2,5]
+// result = [[1,1,1,1,1],[1,1,1,2], [1,2,2],[5]]
+
+int numWaysToMakeAmountX(int i, int x, std::vector<int> &coins) {
+    int take = 0;
+    if (i == coins.size()) {
+        // base case for recursion relationship that descends on i
+        if (x == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    if (coins[i] <= x) {
+        take = numWaysToMakeAmountX(i, x - coins[i], coins);
+    }
+    int skip = numWaysToMakeAmountX(i + 1, x, coins);
+    return skip + take;
+}
+
+int combinations(std::vector<int> coins, int target) {
+    // NOTE: Make this recursive
+    return numWaysToMakeAmountX(0, target, coins);
+}
+
+
+int main() { 
+    // declare the cache
+    std::unordered_map<std::pair<int, int>, std::vector<int>>
+    // declare the testing list
 }

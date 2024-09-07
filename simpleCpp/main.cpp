@@ -27,6 +27,7 @@ std::vector<int> get_values_subvector(const std::vector<tile>& tiles, size_t sta
     return values;
 }
 
+int thing() {} 
 
 void printCombinations(const std::vector<std::vector<int>> &combinations) {
   std::cout << "Printing combinations" << std::endl;
