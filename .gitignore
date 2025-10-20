@@ -37,4 +37,5 @@ googletest/
 
 # Generated files
 */target/*
+./rust_solution/target/*
 
