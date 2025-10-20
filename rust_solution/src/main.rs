@@ -46,8 +46,37 @@ fn print_Vector(vector: Vec<Vec<i8>>) {
     }
 }
 
+fn flip_combination(combination: Vec<i8>, tiles: Vec<i8>) -> Vec<i8> {
+    // using the combinations remove every occurance from combinations from tiles.
+    // combination [1,2] tiles [1,2,3,4,5,6,7,8,9]
+    let new_tiles = combination
+        .into_iter()
+        .filter(|x| {
+            for tile in tiles.iter() {
+                if tile == x {
+                    return false;
+                }
+            }
+            return true;
+        })
+        .collect();
+    new_tiles
+}
+
+fn check_tile(tile: i8, combination: Vec<i8>) -> bool {
+    match // implement a check tile function:
+}
+
+fn check_comb_poss(combination: Vec<i8>, tiles: Vec<i8>) -> bool {
+    let checks = 0;
+    for tile in tiles.iter() {
+        
+    }
+}
+
 fn play_turn() -> i16 {
     let score: i16 = 0;
+    let tiles: Vec<i8> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
     /*
     Conditions to stop playing:
     1. All tiles flipped
@@ -56,6 +85,10 @@ fn play_turn() -> i16 {
     else keep playing
     tile flipped = removed
     */
+    //    while (tiles.len() != 0 || ) {
+    //
+    //    }
+    return 2;
 }
 
 fn main() {
